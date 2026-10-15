@@ -39,4 +39,8 @@ const go=()=>{a.play().then(fade).catch(()=>{});bp.textContent='■ Disengage sc
 bp.onclick=()=>{if(a.paused){if(!a.src&&!load())return;go()}else{a.pause();bp.textContent='▶ Engage score';bp.setAttribute('aria-pressed','false')}};
 $('#pnext').onclick=()=>{if(!T.length)return;i=(i+1)%T.length;load();go()};a.onended=()=>$('#pnext').click();
 $('#pmute').onclick=()=>{a.muted=!a.muted;localStorage.setItem('htMute',a.muted?'1':'0');$('#pmute').textContent=a.muted?'Unmute':'Mute'};vol.oninput=()=>{clearInterval(fd);a.volume=+vol.value}}
+// Decrypt reveal on page headers
+if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.querySelectorAll('.hero h1,.hero h2').forEach(h=>{if(h.querySelector('*'))return;const t=h.textContent,G='#%&01<>/ABCDEF';let f=0;h.setAttribute('aria-label',t);const iv=setInterval(()=>{f++;h.textContent=[...t].map((c,k)=>c===' '||k<f/2?c:G[(Math.random()*G.length)|0]).join('');if(f/2>=t.length){clearInterval(iv);h.textContent=t}},33)});
+// Count-up stats
+document.querySelectorAll('[data-count]').forEach(e=>{const n=+e.dataset.count;let v=0;const st=Math.max(1,n/40),iv=setInterval(()=>{v=Math.min(n,v+st);e.textContent=Math.round(v);if(v>=n)clearInterval(iv)},30)});
 })();
