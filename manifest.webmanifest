@@ -1,0 +1,1 @@
+{"name": "HiTower Institute", "short_name": "HiTower", "start_url": "./", "display": "standalone", "background_color": "#040C16", "theme_color": "#040C16", "icons": [{"src": "assets/logo/3d/favicon-180.png", "sizes": "180x180", "type": "image/png"}, {"src": "assets/logo/3d/favicon-512.png", "sizes": "512x512", "type": "image/png"}]}

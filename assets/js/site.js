@@ -44,3 +44,14 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.querySelecto
 // Count-up stats
 document.querySelectorAll('[data-count]').forEach(e=>{const n=+e.dataset.count;let v=0;const st=Math.max(1,n/40),iv=setInterval(()=>{v=Math.min(n,v+st);e.textContent=Math.round(v);if(v>=n)clearInterval(iv)},30)});
 })();
+// Stepper
+document.querySelectorAll('.steps button').forEach(b=>b.addEventListener('click',()=>{const o=b.getAttribute('aria-expanded')==='true';b.setAttribute('aria-expanded',!o)}));
+// Earth ops strip: USGS quakes M4.5+ 24h, NOAA Kp, Open-Meteo San Diego. No keys; cached 10 min; silent fallback.
+(()=>{const eo=document.getElementById('earthops');if(!eo)return;
+const get=(k,u)=>{try{const c=JSON.parse(sessionStorage.getItem(k)||'null');if(c&&Date.now()-c.t<6e5)return Promise.resolve(c.d)}catch(e){}
+const ac=new AbortController();setTimeout(()=>ac.abort(),6000);return fetch(u,{signal:ac.signal}).then(r=>r.json()).then(d=>{try{sessionStorage.setItem(k,JSON.stringify({t:Date.now(),d}))}catch(e){}return d}).catch(()=>null)};
+Promise.all([get('q','https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson').then(d=>d&&{n:d.features.length,m:Math.max(0,...d.features.map(f=>f.properties.mag))}),
+get('kp','https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json').then(d=>{if(!d||!d.length)return null;const r=d[d.length-1];return r.Kp??r.kp_index??r[1]}),
+get('wx','https://api.open-meteo.com/v1/forecast?latitude=32.7157&longitude=-117.1611&current=temperature_2m,wind_speed_10m&temperature_unit=fahrenheit&wind_speed_unit=mph').then(d=>d&&d.current)])
+.then(([q,kp,wx])=>{const p=[];if(q)p.push(`Seismic M4.5+ 24h: <b>${q.n}</b>${q.n?` (max M${q.m.toFixed(1)})`:''}`);if(kp!=null&&!isNaN(+kp))p.push(`Geomagnetic Kp: <b>${(+kp).toFixed(1)}</b>`);if(wx)p.push(`Node weather SD: <b>${Math.round(wx.temperature_2m)}°F</b> · wind ${Math.round(wx.wind_speed_10m)} mph`);
+eo.innerHTML=p.length?'Earth ops // '+p.join(' &nbsp;·&nbsp; ')+' <small>(USGS · NOAA SWPC · Open-Meteo)</small>':'Earth ops // feeds offline'})})();

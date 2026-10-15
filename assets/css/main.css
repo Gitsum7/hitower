@@ -83,3 +83,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--cy);outline:none;box-
 .player{border-top-color:rgba(63,216,255,.25)}.player button:hover{border-color:var(--cy);color:var(--cy)}#pstat{color:var(--cy)}
 @media(max-width:600px){nav .ni{display:none}}
 .cls .mir{letter-spacing:0;margin-right:.3em}
+.eops{border:1px solid rgba(63,216,255,.3);padding:.5rem .7rem;margin:.6rem 0;color:#8FB3C8}.eops b{color:var(--cy)}
+.steps{list-style:none;padding:0}.steps li::marker{content:""}.steps button{width:100%;text-align:left;background:none;border:1px solid rgba(63,216,255,.25);color:var(--w);font:600 1rem "Rajdhani";letter-spacing:.08em;text-transform:uppercase;padding:.7rem;cursor:pointer}.steps button[aria-expanded=true]{border-color:var(--r);color:var(--r)}.steps button+div{display:none;padding:.7rem}.steps button[aria-expanded=true]+div{display:block}
+code{font-family:"JetBrains Mono",monospace;color:var(--cy)}
+footer{color:#8A9AAA;font-size:.62rem}
