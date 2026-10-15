@@ -1,8 +1,8 @@
 # Builds static pages from src/ with shared header/nav/footer. Run: python3 build.py
 import re,os
-NAV=[('','Home'),('research.html','Research'),('catalog/','Catalog'),('leaders/','Leaders'),('local/','Local'),('donate/','Donate'),('threat-lab/','Threat Lab'),('contact/','Contact'),('access/','Access')]
+NAV=[('','Home'),('research.html','Research'),('catalog/','Catalog'),('leaders/','Leaders'),('local/','Local'),('donate/','Donate'),('threat-lab/','Threat Lab'),('cyber-armory/','Cyber Armory'),('contact/','Contact'),('access/','Access')]
 MORE=[('pi.html','PI'),('team.html','Team'),('report/','Report'),('2a/','2A'),('reserve/','The Reserve'),('credits-programs/','Programs'),('score-credits/','Score credits')]
-INS={'donate':'donate','catalog':'catalog','leaders':'leaders','local':'local','contact':'contact','report':'report','access':'access','2a':'2a','reserve':'reserve','score-credits':'score-credits','credits-programs':'credits-programs','threat-lab':'threat-lab','research':'research','pi':'research','team':'leaders'}
+INS={'donate':'donate','catalog':'catalog','leaders':'leaders','local':'local','contact':'contact','report':'report','access':'access','2a':'2a','reserve':'reserve','score-credits':'score-credits','credits-programs':'credits-programs','threat-lab':'threat-lab','cyber-armory':'cyber-armory','research':'research','pi':'research','team':'leaders'}
 for f in sorted(os.listdir('src')):
     n=f[:-5];s=open('src/'+f).read();t=re.match(r'<!--title:(.*?)-->',s).group(1);dm=re.search(r'<!--desc:(.*?)-->',s);D=dm.group(1) if dm else 'HiTower Institute: independent research lab for off-grid power, water and resilience engineering.';body=re.sub(r'<!--(title|desc):.*?-->\n?','',s)
     folder=n not in('index','pi','research','team','404');R='../' if folder else '';me=(n+'/') if folder else ('' if n=='index' else f)

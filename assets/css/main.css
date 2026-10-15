@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Black+Ops+One&family=Share+Tech+Mono&display=swap");
 :root{--bg:#040C16;--p:#0A1520;--w:#F3EBDD;--m:#9C8F7A;--d:#6F6656;--r:#FFB000;--c:#7FA6BF;--hl:rgba(255,176,0,.14);--lead:#D9CDB8;--grid:rgba(120,170,200,.13);--grid2:rgba(120,170,200,.055)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--w);font:15px/1.6 "Space Grotesk",system-ui,sans-serif;-webkit-font-smoothing:antialiased;
@@ -87,3 +87,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--cy);outline:none;box-
 .steps{list-style:none;padding:0}.steps li::marker{content:""}.steps button{width:100%;text-align:left;background:none;border:1px solid rgba(63,216,255,.25);color:var(--w);font:600 1rem "Rajdhani";letter-spacing:.08em;text-transform:uppercase;padding:.7rem;cursor:pointer}.steps button[aria-expanded=true]{border-color:var(--r);color:var(--r)}.steps button+div{display:none;padding:.7rem}.steps button[aria-expanded=true]+div{display:block}
 code{font-family:"JetBrains Mono",monospace;color:var(--cy)}
 footer{color:#8A9AAA;font-size:.62rem}
+
+.wxnow b{font-size:1.6rem;color:var(--cy)}.wxd{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.5rem;margin:.6rem 0}.wxd div{border:1px solid rgba(63,216,255,.25);padding:.4rem;display:flex;flex-direction:column}.wxd b{color:var(--a,#FFB000)}
+.hzg{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.8rem}.hzg ul{padding-left:1rem}.sev-extreme,.sev-severe{background:#c0392b!important;color:#fff}.sev-moderate{background:#FFB000!important;color:#040C16}
+.armory h2,.armory h3,.ar h3{font-family:"Black Ops One","Rajdhani",sans-serif;letter-spacing:.08em}.ar .tag{font-family:"Share Tech Mono",monospace;font-size:.75rem;color:#FFB000}.ar .grid article a{color:var(--cy)}

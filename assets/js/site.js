@@ -46,12 +46,36 @@ document.querySelectorAll('[data-count]').forEach(e=>{const n=+e.dataset.count;l
 })();
 // Stepper
 document.querySelectorAll('.steps button').forEach(b=>b.addEventListener('click',()=>{const o=b.getAttribute('aria-expanded')==='true';b.setAttribute('aria-expanded',!o)}));
-// Earth ops strip: USGS quakes M4.5+ 24h, NOAA Kp, Open-Meteo San Diego. No keys; cached 10 min; silent fallback.
-(()=>{const eo=document.getElementById('earthops');if(!eo)return;
-const get=(k,u)=>{try{const c=JSON.parse(sessionStorage.getItem(k)||'null');if(c&&Date.now()-c.t<6e5)return Promise.resolve(c.d)}catch(e){}
-const ac=new AbortController();setTimeout(()=>ac.abort(),6000);return fetch(u,{signal:ac.signal}).then(r=>r.json()).then(d=>{try{sessionStorage.setItem(k,JSON.stringify({t:Date.now(),d}))}catch(e){}return d}).catch(()=>null)};
-Promise.all([get('q','https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson').then(d=>d&&{n:d.features.length,m:Math.max(0,...d.features.map(f=>f.properties.mag))}),
-get('kp','https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json').then(d=>{if(!d||!d.length)return null;const r=d[d.length-1];return r.Kp??r.kp_index??r[1]}),
-get('wx','https://api.open-meteo.com/v1/forecast?latitude=32.7157&longitude=-117.1611&current=temperature_2m,wind_speed_10m&temperature_unit=fahrenheit&wind_speed_unit=mph').then(d=>d&&d.current)])
-.then(([q,kp,wx])=>{const p=[];if(q)p.push(`Seismic M4.5+ 24h: <b>${q.n}</b>${q.n?` (max M${q.m.toFixed(1)})`:''}`);if(kp!=null&&!isNaN(+kp))p.push(`Geomagnetic Kp: <b>${(+kp).toFixed(1)}</b>`);if(wx)p.push(`Node weather SD: <b>${Math.round(wx.temperature_2m)}°F</b> · wind ${Math.round(wx.wind_speed_10m)} mph`);
-eo.innerHTML=p.length?'Earth ops // '+p.join(' &nbsp;·&nbsp; ')+' <small>(USGS · NOAA SWPC · Open-Meteo)</small>':'Earth ops // feeds offline'})})();
+// Earth ops: IP-located weather (ipwho.is -> ipapi.co -> San Diego) + modular Disaster Forecast. Keyless; cached 10 min.
+(()=>{const eo=document.getElementById('earthops'),wxe=document.getElementById('wx'),hz=document.getElementById('hazards');if(!eo&&!wxe&&!hz)return;
+const get=(k,u,o)=>{try{const c=JSON.parse(sessionStorage.getItem(k)||'null');if(c&&Date.now()-c.t<6e5)return Promise.resolve(c.d)}catch(e){}
+const ac=new AbortController();setTimeout(()=>ac.abort(),7000);return fetch(u,Object.assign({signal:ac.signal},o||{})).then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>{try{sessionStorage.setItem(k,JSON.stringify({t:Date.now(),d}))}catch(e){}return d}).catch(()=>null)};
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const SD={lat:32.7157,lon:-117.1611,city:'San Diego',cc:'US',fb:1};
+const loc=get('ip1','https://ipwho.is/').then(d=>d&&d.success!==false&&d.latitude?{lat:d.latitude,lon:d.longitude,city:d.city,cc:d.country_code}:get('ip2','https://ipapi.co/json/').then(d=>d&&d.latitude?{lat:d.latitude,lon:d.longitude,city:d.city,cc:d.country_code}:SD)).then(l=>l||SD);
+const WMO={0:'Clear',1:'Mostly clear',2:'Partly cloudy',3:'Overcast',45:'Fog',48:'Rime fog',51:'Drizzle',53:'Drizzle',55:'Heavy drizzle',61:'Light rain',63:'Rain',65:'Heavy rain',66:'Freezing rain',67:'Freezing rain',71:'Light snow',73:'Snow',75:'Heavy snow',77:'Snow grains',80:'Showers',81:'Showers',82:'Violent showers',85:'Snow showers',86:'Snow showers',95:'Thunderstorm',96:'Thunderstorm + hail',99:'Thunderstorm + hail'};
+const us=l=>l.cc==='US';
+const fx=l=>get('fx'+l.lat.toFixed(2)+l.lon.toFixed(2),`https://api.open-meteo.com/v1/forecast?latitude=${l.lat}&longitude=${l.lon}&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,wind_gusts_10m,relative_humidity_2m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_gusts_10m_max&hourly=cape&forecast_days=4&timezone=auto`+(us(l)?'&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch':''));
+// Hazard modules: add more by pushing {id,name,run(loc,fx)->Promise<html>}
+const MODS=[
+{id:'storms',name:'Incoming Storms',run:async(l,f)=>{const out=[];
+ if(us(l)){const a=await get('nws'+l.lat.toFixed(2)+l.lon.toFixed(2),`https://api.weather.gov/alerts/active?point=${(+l.lat).toFixed(4)},${(+l.lon).toFixed(4)}`,{headers:{Accept:'application/geo+json'}});
+  if(a&&a.features){const rx=/storm|hurricane|tropical|flood|wind|winter|blizzard|ice|snow|tornado|thunder|surf|gale|typhoon|rain|freeze|dust/i;const al=a.features.map(x=>x.properties).filter(p=>rx.test(p.event));
+   out.push(al.length?'<ul>'+al.slice(0,8).map(p=>`<li><span class="badge sev-${esc((p.severity||'').toLowerCase())}">${esc(p.severity||'n/a')}</span> <b>${esc(p.event)}</b> · until ${esc(p.ends||p.expires?new Date(p.ends||p.expires).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}):'TBD')}<br><small>${esc(p.headline||p.areaDesc)}</small></li>`).join('')+'</ul>':'<p>NWS: no active storm, flood, wind or winter alerts for your point.</p>')}
+  else out.push('<p>NWS alert feed unavailable right now.</p>')}
+ if(f&&f.daily){const d=f.daily,u=us(l),gT=u?40:65,pT=u?1:25,cape=Math.max(0,...(f.hourly?.cape||[0]));const flags=[];
+  d.time.forEach((t,i)=>{const g=d.wind_gusts_10m_max[i],p=d.precipitation_sum[i],c=d.weather_code[i];if(g>=gT||p>=pT||c>=95)flags.push(`${new Date(t+'T12:00').toLocaleDateString([], {weekday:'short'})}: ${WMO[c]||'—'}, gusts ${Math.round(g)}${u?' mph':' km/h'}, precip ${p}${u?'"':' mm'}`)});
+  const risk=flags.length>1||cape>2000?'ELEVATED':flags.length||cape>1000?'WATCH':'LOW';
+  out.push(`<p>4-day storm outlook: <b>${risk}</b> <small>(peak CAPE ${Math.round(cape)} J/kg)</small></p>`+(flags.length?'<ul>'+flags.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>':''))}
+ out.push('<p><small>Tropical systems: <a href="https://www.nhc.noaa.gov/" target="_blank" rel="noopener">NHC active storms</a></small></p>');return out.join('')}},
+{id:'quakes',name:'Seismic',run:async l=>{const d=await get('q','https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_day.geojson');if(!d)return '<p>USGS feed unavailable.</p>';
+ const R=6371,near=d.features.filter(x=>{const[lo,la]=x.geometry.coordinates,dl=(la-l.lat)*Math.PI/180,dn=(lo-l.lon)*Math.PI/180,h=Math.sin(dl/2)**2+Math.cos(l.lat*Math.PI/180)*Math.cos(la*Math.PI/180)*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))<1000});
+ const m=Math.max(0,...d.features.map(f=>f.properties.mag));return `<p>Global M4.5+ last 24h: <b>${d.features.length}</b>${d.features.length?` (max M${m.toFixed(1)})`:''} · within 1000 km of you: <b>${near.length}</b></p>`}},
+{id:'space',name:'Space Weather',run:async()=>{const d=await get('kp','https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json');if(!d||!d.length)return '<p>NOAA SWPC feed unavailable.</p>';const r=d[d.length-1],kp=+(r.Kp??r.kp_index??r[1]);if(isNaN(kp))return '<p>Kp unavailable.</p>';
+ return `<p>Planetary Kp: <b>${kp.toFixed(1)}</b> · ${kp>=7?'Strong geomagnetic storm (G3+)':kp>=5?'Geomagnetic storm (G1+)':kp>=4?'Unsettled':'Quiet'}</p>`}}];
+loc.then(async l=>{const f=await fx(l),u=us(l),c=f&&f.current;const where=esc(l.city||'your area')+(l.fb?' (default node)':'');
+ if(wxe){wxe.innerHTML=c?`<div class="lbl"><b>●</b> Local weather // ${where}</div><p class="wxnow"><b>${Math.round(c.temperature_2m)}°${u?'F':'C'}</b> ${esc(WMO[c.weather_code]||'')} · feels ${Math.round(c.apparent_temperature)}° · wind ${Math.round(c.wind_speed_10m)} (gusts ${Math.round(c.wind_gusts_10m)}) ${u?'mph':'km/h'} · RH ${c.relative_humidity_2m}%</p><div class="wxd">`+f.daily.time.map((t,i)=>`<div><small>${new Date(t+'T12:00').toLocaleDateString([], {weekday:'short'})}</small><b>${Math.round(f.daily.temperature_2m_max[i])}°/${Math.round(f.daily.temperature_2m_min[i])}°</b><small>${esc(WMO[f.daily.weather_code[i]]||'')} · ${f.daily.precipitation_probability_max[i]??0}%</small></div>`).join('')+'</div><small class="lbl">Location approximated from IP · Open-Meteo</small>':`<div class="lbl">Local weather // ${where}</div><p>Weather feed offline. Try again shortly.</p>`}
+ if(eo){eo.innerHTML=`Earth ops // ${where}`+(c?` <b>${Math.round(c.temperature_2m)}°${u?'F':'C'}</b>`:'')+' · disaster forecast below <small>(USGS · NOAA · NWS · Open-Meteo)</small>'}
+ if(hz){hz.innerHTML='<div class="lbl"><b>●</b> Disaster Forecast // '+where+'</div><div class="hzg">'+MODS.map(m=>`<article class="card" id="hz-${m.id}"><h3>${m.name}</h3><div>Acquiring…</div></article>`).join('')+'</div>';
+  MODS.forEach(m=>Promise.resolve().then(()=>m.run(l,f)).catch(()=>'<p>Module offline.</p>').then(h=>{hz.querySelector(`#hz-${m.id} div`).innerHTML=h}))}});
+})();
