@@ -8,7 +8,7 @@ $('#gmsg').textContent=h===KEY_HASH?'Authenticated. Clearance pending: no conten
 // Forms (Formspree placeholder)
 document.querySelectorAll('form[data-fs]').forEach(f=>f.addEventListener('submit',e=>{const m=f.querySelector('.fmsg');
 if(f.querySelector('.hp input')?.value){e.preventDefault();return}
-if(f.action.includes('mdeapgez')){e.preventDefault();m.textContent='Uplink not configured yet. Nothing was transmitted.'}}));
+if(f.action.includes('FORMSPREE_ID')){e.preventDefault();m.textContent='Uplink not configured yet. Nothing was transmitted.'}}));
 // Donate calculator
 const dc=$('#calc');if(dc)J('data/tax-2026.json').then(T=>{$('#taxyr').textContent=T.year;$('#taxsrc').href=T.source;
 const tax=(ti,s)=>{let t=0,b=T.brackets[s];for(let i=0;i<b.length;i++){const lo=b[i][0],hi=b[i+1]?b[i+1][0]:Infinity;if(ti>lo)t+=(Math.min(ti,hi)-lo)*b[i][1]}return t};
