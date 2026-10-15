@@ -4,7 +4,7 @@ NAV=[('','Home'),('research.html','Research'),('pi.html','PI'),('catalog/','Cata
 MORE=[('pi.html','PI'),('team.html','Team'),('report/','Report'),('2a/','2A'),('reserve/','The Reserve'),('credits-programs/','Programs'),('score-credits/','Score credits')]
 INS={'donate':'donate','catalog':'catalog','leaders':'leaders','local':'local','contact':'contact','report':'report','access':'access','2a':'2a','reserve':'reserve','score-credits':'score-credits','credits-programs':'credits-programs','threat-lab':'threat-lab','cyber-armory':'cyber-armory','research':'research','pi':'research','team':'leaders'}
 for f in sorted(os.listdir('src')):
-    n=f[:-5];s=open('src/'+f).read();t=re.match(r'<!--title:(.*?)-->',s).group(1);dm=re.search(r'<!--desc:(.*?)-->',s);D=dm.group(1) if dm else 'HiTower Institute: independent research lab for off-grid power, water and resilience engineering.';body=re.sub(r'<!--(title|desc):.*?-->\n?','',s)
+    n=f[:-5];s=open('src/'+f).read();t=re.match(r'<!--title:(.*?)-->',s).group(1);dm=re.search(r'<!--desc:(.*?)-->',s);D=dm.group(1) if dm else 'HiTower Institute: nonprofit research institute in formation (est. 2026) studying natural hazards, climate risk, geospatial access and emergency management.';body=re.sub(r'<!--(title|desc):.*?-->\n?','',s)
     folder=n not in('index','pi','research','team','404');R='../' if folder else '';me=(n+'/') if folder else ('' if n=='index' else f)
     ni=lambda h:(f'<img class="ni" src="{R}assets/insignia/{INS[h.strip("/").replace(".html","")]}.svg" alt="">' if h.strip('/').replace('.html','') in INS else '')
     ik=INS.get(n)

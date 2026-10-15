@@ -1,11 +1,55 @@
-[{"name":"ESP32-C5 dev board","cat":"Compute","desc":"Dual-band Wi-Fi 6 microcontroller board for field sensors.","price":"$15","icon":"chip","link":"https://www.espressif.com/en/products/socs/esp32-c5"},
-{"name":"ESP32-S3 dev board","cat":"Compute","desc":"Wi-Fi + BLE microcontroller with vector extensions for edge AI.","price":"$12","icon":"chip","link":"https://www.espressif.com/en/products/socs/esp32-s3"},
-{"name":"Hydrogen fuel cell generator","cat":"Power","desc":"Quiet off-grid generator class for vans, cabins and field posts.","price":"$4,500","icon":"h2"},
-{"name":"Starlink","cat":"Uplink","desc":"Satellite internet, purchased directly from Starlink. HiTower does not resell Starlink.","price":"See starlink.com","icon":"sat","link":"https://www.starlink.com"},
-{"name":"Community center module: Outpost","cat":"Shelter","desc":"Single-module room for meetings and charging.","price":"$60,000","icon":"home1"},
-{"name":"Community center module: Hub","cat":"Shelter","desc":"Two-module center with kitchenette and water station.","price":"$140,000","icon":"home2"},
-{"name":"Community center module: Citadel","cat":"Shelter","desc":"Multi-module campus with clinic room and power plant bay.","price":"$320,000","icon":"home3"},
-{"name":"Atmospheric water generator: Personal","cat":"Water","desc":"Countertop class, a few gallons per day.","price":"$1,500","icon":"water"},
-{"name":"Atmospheric water generator: Site","cat":"Water","desc":"Building or shelter class, tens of gallons per day.","price":"$12,000","icon":"water"},
-{"name":"Atmospheric water generator: Commercial","cat":"Water","desc":"Community or industrial class, hundreds of gallons per day.","price":"$90,000","icon":"water"},
-{"name":"Personal safety sprays","cat":"Protection","desc":"Coming soon, US only, legal review pending.","price":null,"icon":"shield","soon":true}]
+[
+{
+"name": "ESP32-C5 dev board",
+"cat": "Compute",
+"desc": "Dual-band Wi-Fi 6 microcontroller board for field sensors.",
+"price": "$15",
+"icon": "chip",
+"link": "https://www.espressif.com/en/products/socs/esp32-c5"
+},
+{
+"name": "ESP32-S3 dev board",
+"cat": "Compute",
+"desc": "Wi-Fi + BLE microcontroller with vector extensions for edge AI.",
+"price": "$12",
+"icon": "chip",
+"link": "https://www.espressif.com/en/products/socs/esp32-s3"
+},
+{
+"name": "Starlink",
+"cat": "Uplink",
+"desc": "Satellite internet, purchased directly from Starlink. HiTower does not resell Starlink.",
+"price": "See starlink.com",
+"icon": "sat",
+"link": "https://www.starlink.com"
+},
+{
+"name": "Atmospheric water generator: Personal",
+"cat": "Water",
+"desc": "Countertop class, a few gallons per day.",
+"price": "$1,500",
+"icon": "water"
+},
+{
+"name": "Atmospheric water generator: Site",
+"cat": "Water",
+"desc": "Building or shelter class, tens of gallons per day.",
+"price": "$12,000",
+"icon": "water"
+},
+{
+"name": "Atmospheric water generator: Commercial",
+"cat": "Water",
+"desc": "Community or industrial class, hundreds of gallons per day.",
+"price": "$90,000",
+"icon": "water"
+},
+{
+"name": "Personal safety sprays",
+"cat": "Protection",
+"desc": "Coming soon, US only, legal review pending.",
+"price": null,
+"icon": "shield",
+"soon": true
+}
+]

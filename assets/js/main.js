@@ -4,11 +4,11 @@ const ck=$('#clock');if(ck){const t=()=>ck.textContent=new Date().toISOString().
 const io=new IntersectionObserver(e=>e.forEach(x=>x.isIntersecting&&x.target.classList.add('in')),{threshold:.1});
 document.querySelectorAll('.reveal').forEach(el=>rm?el.classList.add('in'):io.observe(el));
 const svg=$('#map');if(!svg)return;const NS='http://www.w3.org/2000/svg';
-const B=[["Adaptive Adventure","I",[["Archive & Field Library","Field notes, gear logs and route records for accessible off-grid expeditions."]]],
-["Hydrogen & Off-Grid Power","II",[["Van Power Systems","Hydrogen fuel-cell and hybrid battery architectures for van conversions and generators."]]],
-["Water & Power Communities","III",[["Coastal EV Access","CPRA records study of public EV charging access and pricing on public coastal land."]]],
-["Open Hardware & Plain Text","IV",[["Off-Grid Battery Resilience","Open logging tools that model real-world battery capacity and energy use."]]],
-["Integrity Desk","V",[["Critical-Mineral Market Integrity","Flagging fraudulent bulk copper and scrap offers against benchmark pricing."],["Case Files & Consumer Protection","Documented cases of marketplace fraud, compiled to warn and protect buyers."]]]];
+const B=[["Adaptive Adventure","I",[["Accessible Field Programs","Accessible field expeditions and adapted gear for people with disabilities."]]],
+["Hazard Forecasting","II",[["Disaster Forecast","Localized storm, flood and fire-weather forecasting from public hazard data."]]],
+["Geospatial Studies","III",[["Coastal Access","CPRA-informed study of public access on San Diego coastal land."],["Trail & Field Mapping","Field mapping of trails and public lands."]]],
+["Field Leaders","IV",[["Reference Institutions","Public agencies and institutions leading hazard, weather and geospatial science."]]],
+["Emergency Management","V",[["Public-Safety Information","Methods for verifying public hazard reports to support disaster response."]]]];
 const el=(n,a,par)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);(par||svg).appendChild(e);return e};
 const pol=(r,d)=>[r*Math.cos((d-90)*Math.PI/180),r*Math.sin((d-90)*Math.PI/180)];
 const g=el('g',{class:'spin'});[60,110,165].forEach(r=>el('circle',{class:'ring',r,'stroke-dasharray':r==110?'1 5':''},g));
