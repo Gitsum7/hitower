@@ -1,3 +1,1 @@
-body{font-family:Georgia,serif;max-width:760px;margin:40px auto;padding:0 20px;color:#1b1f2a;background:#f7f5ef;line-height:1.6}
-header{border-bottom:2px solid #1b1f2a;margin-bottom:24px}h1{letter-spacing:4px;margin:0}nav a{margin-right:16px;color:#7a1f1f;text-decoration:none}
-.card{background:#fff;border:1px solid #ddd;padding:16px 20px;margin:14px 0}small{color:#666}
+@import url("assets/css/main.css");
