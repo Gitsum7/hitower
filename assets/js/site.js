@@ -1,7 +1,7 @@
 (()=>{const R=document.body.dataset.root||'',$=s=>document.querySelector(s),J=u=>fetch(R+u).then(r=>r.json());
 const money=n=>'$'+Math.round(n).toLocaleString('en-US');
 // Gate (cosmetic only: static site, nothing secret behind it). Key hash = SHA-256 of placeholder key; change in config below.
-const KEY_HASH='071e89627a2d7f5598184ff60144d1f03699fa7ab7e212718f71a65a07c92e28';
+const KEY_HASH='ce78b9113e95d973029a90fddda5c3ee2f9fe1644e536b3616672c96d171824c';
 const gf=$('#gate');if(gf)gf.addEventListener('submit',async e=>{e.preventDefault();const v=gf.key.value.trim();
 const h=[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)))].map(b=>b.toString(16).padStart(2,'0')).join('');
 $('#gmsg').textContent=h===KEY_HASH?'Authenticated. Clearance pending: no content is released at this node yet.':'Decryption failed. Key rejected.'});
