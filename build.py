@@ -19,7 +19,7 @@ for f in sorted(os.listdir('src')):
 <body data-root="{R}"><div class="bar"><span><span class="dot"></span>Quantum-safe channel // concept</span><span>Node status: online</span><span>Node time <span id="clock">--:--:--Z</span></span></div>
 <header><a class="logo" href="{R}./"><img src="{R}assets/logo/refined-3d.svg" alt=""><span>HITOWER</span></a><nav aria-label="Primary">{nav}</nav></header><main>
 {body}
-</main><footer><div class="foot">{more}</div><br>HiTower Institute // San Diego, CA, USA // Nonprofit in formation // Est. 2026<br>Score: public-domain and CC0 recordings, see <a href="{R}score-credits/">credits</a>. Not legal or tax advice. For emergencies call 911.</footer>
+</main><footer><div class="foot">{more}</div><br>HiTower Institute // San Diego, CA, USA // Nonprofit in formation // Est. 2026 // <a href="mailto:hitower.edu@icloud.com">hitower.edu@icloud.com</a><br>Score: public-domain and CC0 recordings, see <a href="{R}score-credits/">credits</a>. Not legal or tax advice. For emergencies call 911.</footer>
 <a class="fab" href="tel:+12027501391">Non-emergency line</a>
 <div id="player" class="player" role="region" aria-label="Score"><button id="pplay" type="button" aria-pressed="false">▶ Engage score</button><button id="pnext" type="button" aria-label="Next track">Next</button><button id="pmute" type="button">Mute</button><label for="pvol" class="hp">Volume</label><input id="pvol" type="range" min="0" max="1" step="0.05" value="0.35"><span id="pstat">Score standby</span></div>
 <script src="{R}assets/js/bg.js" defer></script><script src="{R}assets/js/main.js" defer></script><script src="{R}assets/js/site.js" defer></script></body></html>'''
