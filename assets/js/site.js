@@ -21,6 +21,8 @@ o.innerHTML=`Deductible this year: <b>${money(ded)}</b><br>Estimated tax savings
 const ic={chip:'<rect x="30" y="20" width="40" height="40" fill="none" stroke="currentColor"/><path d="M38 20v-8M50 20v-8M62 20v-8M38 60v8M50 60v8M62 60v8" stroke="currentColor"/>',h2:'<circle cx="50" cy="40" r="20" fill="none" stroke="currentColor"/><text x="50" y="46" text-anchor="middle" font-size="16" fill="currentColor">H₂</text>',sat:'<path d="M30 60 L70 20 M45 45 a20 20 0 0 1 10 -25" fill="none" stroke="currentColor"/><circle cx="72" cy="18" r="4" fill="currentColor"/>',home1:'<path d="M30 60V35h40v25Z" fill="none" stroke="currentColor"/>',home2:'<path d="M20 60V35h30v25ZM50 60V30h30v30Z" fill="none" stroke="currentColor"/>',home3:'<path d="M10 60V40h25v20ZM35 60V25h30v35ZM65 60V40h25v20Z" fill="none" stroke="currentColor"/><path d="M50 25v-10" stroke="currentColor"/>',water:'<path d="M50 15 C40 35 34 42 34 50 a16 16 0 0 0 32 0 C66 42 60 35 50 15Z" fill="none" stroke="currentColor"/>',shield:'<path d="M50 14 L72 22 V42 C72 54 62 62 50 66 C38 62 28 54 28 42 V22Z" fill="none" stroke="currentColor"/>'};
 const cg=$('#cards');if(cg)J('data/catalog.json').then(L=>cg.innerHTML=L.map(i=>`<article class="card"><svg viewBox="0 0 100 76" style="color:var(--r)" aria-hidden="true">${ic[i.icon]}</svg><div class="lbl"><b>${i.cat}</b></div><h3>${i.name}</h3><p>${i.desc}</p>${i.soon?'<span class="badge">Coming soon · US only · legal review pending</span>':`<p><b>${i.price}</b> <span class="badge">Placeholder, not a quote</span></p>`}${i.link?`<a class="btn" href="${i.link}" rel="noopener" target="_blank">Open official site</a>`:''}${i.soon?'':`<a class="btn r" href="#req" data-item="${i.name}">Request item</a>`}</article>`).join(''));
 document.addEventListener('click',e=>{const a=e.target.closest('[data-item]');if(a){$('#req-item').value=a.dataset.item}});
+// Credits
+const cr=$('#credits');if(cr)J('data/playlist.json').then(p=>cr.innerHTML=p.tracks.map(t=>`<article><div class="lbl"><b>${t.composer}</b></div><h3>${t.title}</h3><p>${t.performer}<br><span class="badge">${t.license}</span></p><a href="${t.source}" target="_blank" rel="noopener">Source file page</a></article>`).join(''));
 // Leaders
 const ld=$('#leaders');if(ld)J('data/leaders.json').then(L=>ld.innerHTML=L.map(([c,xs])=>`<article><div class="lbl"><b>Sector</b> // ${c}</div><ul>${xs.map(([n,u])=>`<li><a href="${u}" rel="noopener" target="_blank">${n}</a></li>`).join('')}</ul></article>`).join(''));
 // Local
@@ -28,11 +30,13 @@ const lz=$('#zipf');if(lz)lz.addEventListener('submit',e=>{e.preventDefault();co
 if(!/^\d{5}$/.test(z)){o.innerHTML='<b>Invalid ZIP.</b> Enter 5 digits.';return}
 const L=[['211 (local help line directory)','https://www.211.org/'],['findhelp.org results for '+z,'https://www.findhelp.org/search_results/'+z],['SNAP state directory (USDA)','https://www.fns.usda.gov/snap/state-directory'],['Goodwill locator','https://www.goodwill.org/locator/'],['Meals on Wheels locator','https://www.mealsonwheelsamerica.org/find-meals'],['SAM.gov contract opportunities','https://sam.gov/search/?index=opp']];
 o.innerHTML='<ul>'+L.map(([n,u])=>`<li><a href="${u}" target="_blank" rel="noopener">${n}</a></li>`).join('')+'</ul><small>Some directories ask for your ZIP again on their own site.</small>'});
-// Audio
-const pl=$('#player');if(pl){const a=new Audio(),st=$('#pstat');let T=[],i=0;a.muted=localStorage.getItem('htMute')==='1';$('#pmute').textContent=a.muted?'Unmute':'Mute';
-J('data/playlist.json').then(p=>{T=p.tracks||[];st.textContent=T.length?'Channel ready':'No licensed tracks loaded'});
-const load=()=>{if(!T.length)return false;a.src=R+T[i].src;st.textContent=T[i].title;return true};
-$('#pplay').onclick=()=>{if(a.paused){if(!a.src&&!load())return;a.play().catch(()=>{});$('#pplay').textContent='Pause'}else{a.pause();$('#pplay').textContent='Play'}};
-$('#pnext').onclick=()=>{if(!T.length)return;i=(i+1)%T.length;load();a.play().catch(()=>{})};a.onended=()=>$('#pnext').click();
-$('#pmute').onclick=()=>{a.muted=!a.muted;localStorage.setItem('htMute',a.muted?'1':'0');$('#pmute').textContent=a.muted?'Unmute':'Mute'};$('#pvol').oninput=e=>a.volume=e.target.value}
+// Audio: score starts only on user tap, fades in to the chosen volume
+const pl=$('#player');if(pl){const a=new Audio(),st=$('#pstat'),bp=$('#pplay'),vol=$('#pvol');let T=[],i=0,fd;a.preload='none';a.muted=localStorage.getItem('htMute')==='1';$('#pmute').textContent=a.muted?'Unmute':'Mute';
+J('data/playlist.json').then(p=>{T=p.tracks||[];st.textContent=T.length?'Score standby':'No licensed tracks loaded'});
+const fade=()=>{clearInterval(fd);a.volume=0;const tgt=+vol.value;fd=setInterval(()=>{a.volume=Math.min(tgt,a.volume+tgt/30);if(a.volume>=tgt)clearInterval(fd)},100)};
+const load=()=>{if(!T.length)return false;a.src=R+T[i].src;st.textContent=T[i].title+' // '+T[i].composer;return true};
+const go=()=>{a.play().then(fade).catch(()=>{});bp.textContent='■ Disengage score';bp.setAttribute('aria-pressed','true')};
+bp.onclick=()=>{if(a.paused){if(!a.src&&!load())return;go()}else{a.pause();bp.textContent='▶ Engage score';bp.setAttribute('aria-pressed','false')}};
+$('#pnext').onclick=()=>{if(!T.length)return;i=(i+1)%T.length;load();go()};a.onended=()=>$('#pnext').click();
+$('#pmute').onclick=()=>{a.muted=!a.muted;localStorage.setItem('htMute',a.muted?'1':'0');$('#pmute').textContent=a.muted?'Unmute':'Mute'};vol.oninput=()=>{clearInterval(fd);a.volume=+vol.value}}
 })();
